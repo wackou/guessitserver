@@ -39,8 +39,8 @@ def create_app(settings_override=None):
     app.register_blueprint(dashboard.bp)
 
     # Register custom error handlers
-    for e in [500, 404]:
-        app.errorhandler(e)(handle_error)
+    app.errorhandler(404)(lambda e: (render_template('errors/404.html'), 404))
+    app.errorhandler(500)(lambda e: (render_template('errors/500.html'), 500))
 
     # custom filter for showing dates
     app.jinja_env.filters['datetime'] = format_datetime
