@@ -1,0 +1,7 @@
+-r common.txt
+
+ipython
+nose
+setuptools>=0.8 # needed by factory_boy
+factory_boy
+hammock==0.2.4

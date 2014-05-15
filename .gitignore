@@ -1,0 +1,6 @@
+*.pyc
+
+.idea
+dist
+.DS_Store
+guessitserver/guessit.sqlite3
