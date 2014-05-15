@@ -1,0 +1,3 @@
+include *.rst
+recursive-include guessitserver/static *
+recursive-include guessitserver/templates *
