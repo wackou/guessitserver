@@ -7,6 +7,7 @@ from flask import Blueprint, render_template, redirect, url_for, abort, \
     request, send_from_directory, flash, current_app
 from guessitserver.core import db
 from guessitserver.models import Submission
+import guessit
 
 log = logging.getLogger(__name__)
 
@@ -30,10 +31,18 @@ def post_bug_submission():
 
 @bp.route('/')
 def view_bugs():
+    subs = Submission.query.all()
+
+    def guess_popover(filename):
+        g = guessit.guess_video_info(filename)
+        return ', '.join('%s: <b>%s</b>' % (k, v) for k, v in g.items())
+
+    subs = [(sub, guess_popover(sub.filename)) for sub in subs]
     return render_template('buglist.html',
                            title='Guessit bugs',
-                           fields=['filename', 'submit_date'],
-                           submissions=Submission.query.all())
+                           fields=['filename', 'guess', 'submit_date'],
+                           submissions=subs,
+                           guessitversion=guessit.__version__)
 
 
 

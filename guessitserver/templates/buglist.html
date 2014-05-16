@@ -9,6 +9,7 @@
     <thead>
         <tr>{% for f in fields %}
           {% if   f == 'filename'    %} <th>Filename</th>
+          {% elif f == 'guess'       %} <th>Guess (Guessit version: {{ guessitversion }})</th>
           {% elif f == 'submit_date' %} <th>Submit date</th>
           {% elif f == 'resolved'    %} <th>Resolved</th>
           {% elif f == 'active'      %} <th>Active</th>
@@ -19,27 +20,28 @@
     <tfoot>
         <tr>{% for f in fields %}
           {% if   f == 'filename'    %} <th>Filename</th>
+          {% elif f == 'guess'       %} <th>Guess (Guessit version: {{ guessitversion }})</th>
           {% elif f == 'submit_date' %} <th>Submit date</th>
           {% elif f == 'resolved'    %} <th>Resolved</th>
           {% elif f == 'active'      %} <th>Active</th>
-          {% else %}                <th> {{ f }} </th>
+          {% else                    %} <th> {{ f }} </th>
           {% endif %}{% endfor %}
         </tr>
     </tfoot>
     <tbody>
-        {% for submission in submissions %}
+        {% for submission, guess in submissions %}
         <tr>{% for f in fields %}
           {% if   f == 'filename'    %} <td>{{ submission.filename }}</td>
+          {% elif f == 'guess'       %} <td>{{ guess | safe }}</td>
           {% elif f == 'submit_date' %} <td>{{ submission.submit_date | datetime }}</td>
           {% elif f == 'resolved'    %} <td>{{ submission.resolved }}</td>
           {% elif f == 'active'      %} <td>{{ submission.active }}</td>
-          {% else %}                <td> ??? </td>
+          {% else                    %} <td> ??? </td>
           {% endif %}{% endfor %}
         </tr>
         {% endfor %}
     </tbody>
     </table>
-
 
 {% endblock %}
 
