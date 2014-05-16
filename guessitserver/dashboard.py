@@ -34,8 +34,12 @@ def view_bugs():
     subs = Submission.query.all()
 
     def guess_popover(filename):
-        g = guessit.guess_video_info(filename)
-        return ', '.join('%s: <b>%s</b>' % (k, v) for k, v in g.items())
+        try:
+            g = guessit.guess_video_info(filename)
+            return ', '.join('%s: <b>%s</b>' % (k, v) for k, v in g.items())
+        
+        except Exception as e:
+            return 'Exception occurred: %s' % e
 
     subs = [(sub, guess_popover(sub.filename)) for sub in subs]
     return render_template('buglist.html',
