@@ -3,8 +3,7 @@ import json
 import datetime
 import logging
 
-from flask import Blueprint, render_template, redirect, url_for, abort, \
-    request, send_from_directory, flash, current_app
+from flask import Blueprint, render_template, jsonify, request, redirect
 from guessitserver.core import db
 from guessitserver.models import Submission
 import guessit
@@ -20,8 +19,21 @@ def static_from_root():
     static folder. Files still need to be put inside the static folder."""
     return send_from_directory(bp.static_folder, request.path[1:])
 
-@bp.route('/', methods=['POST'])
+@bp.route('/')
+def homepage():
+    return redirect('http://guessit.readthedocs.org/')
+
+@bp.route('/bugs', methods=['POST'])
 def post_bug_submission():
+    """
+    @api {post} /bugs Submit new test case / wrong detection
+    @apiName SubmitBug
+    @apiGroup Guessit
+
+    @apiParam {String} filename Filename which guessit doesn't analyze correctly.
+
+    @apiSuccess {String} &nbsp The submitted filename.
+    """
     filename = request.form['filename']
     s = Submission(filename=filename, submit_date=datetime.datetime.utcnow(),
                    active=False, resolved=False)
@@ -29,7 +41,7 @@ def post_bug_submission():
     db.session.commit()
     return filename
 
-@bp.route('/')
+@bp.route('/bugs')
 def view_bugs():
     subs = Submission.query.all()
 
@@ -37,7 +49,7 @@ def view_bugs():
         try:
             g = guessit.guess_video_info(filename)
             return ', '.join('%s: <b>%s</b>' % (k, v) for k, v in g.items())
-        
+
         except Exception as e:
             return 'Exception occurred: %s' % e
 
@@ -49,5 +61,34 @@ def view_bugs():
                            guessitversion=guessit.__version__)
 
 
+@bp.route('/guess', methods=['POST'])
+def guess_file_info():
+    """
+    @api {post} /guess Detect properties for a given filename
+    @apiName GuessFileInfo
+    @apiGroup Guessit
 
+    @apiParam {String} filename Filename out of which to guess information.
 
+    @apiSuccess {Object} &nbsp Object containing all detected fields.
+                               For a list of detected properties see <a href="https://guessit.readthedocs.org/en/latest/#features">here</a>
+    """
+    filename = request.form['filename']
+    filetype = request.form.get('type', 'video')
+
+    # TODO: store request in DB
+    # TODO: if exception, store in list of bugs
+    g = guessit.guess_file_info(filename, type=filetype)
+
+    return jsonify(g)
+
+@bp.route('/guessit_version')
+def guessit_version():
+    """
+    @api {get} /guessit_version Return guessit version
+    @apiName GuessitVersion
+    @apiGroup Guessit
+
+    @apiSuccess {String} version Version of GuessIt used for the detection on the server.
+    """
+    return jsonify(version=guessit.__version__)
