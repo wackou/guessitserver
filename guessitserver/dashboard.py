@@ -65,7 +65,7 @@ def view_bugs():
 def guess_file_info_post():
     """
     @api {post} /guess Detect properties for a given filename
-    @apiName GuessFileInfo
+    @apiName GuessFileInfoPost
     @apiGroup Guessit
 
     @apiParam {String} filename Filename out of which to guess information.
@@ -86,7 +86,7 @@ def guess_file_info_post():
 def guess_file_info_get():
     """
     @api {get} /guess Detect properties for a given filename
-    @apiName GuessFileInfo
+    @apiName GuessFileInfoGet
     @apiGroup Guessit
 
     @apiParam {String} filename Filename out of which to guess information.
