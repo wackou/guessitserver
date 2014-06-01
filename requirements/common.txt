@@ -13,7 +13,7 @@ alembic==0.6.3
 # for compiling webassets
 # webassets 0.9 seems to have a unicode bug for us...
 # see here: https://github.com/miracle2k/webassets/issues/255
-webassets==0.8
+webassets==0.9
 cssmin
 
 # other dependencies which do not require a specific version come from setup.py

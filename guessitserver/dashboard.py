@@ -62,7 +62,7 @@ def view_bugs():
 
 
 @bp.route('/guess', methods=['POST'])
-def guess_file_info():
+def guess_file_info_post():
     """
     @api {post} /guess Detect properties for a given filename
     @apiName GuessFileInfo
@@ -74,7 +74,28 @@ def guess_file_info():
                                For a list of detected properties see <a href="https://guessit.readthedocs.org/en/latest/#features">here</a>
     """
     filename = request.form['filename']
-    filetype = request.form.get('type', 'video')
+    filetype = request.form.get('type', None)
+
+    # TODO: store request in DB
+    # TODO: if exception, store in list of bugs
+    g = guessit.guess_file_info(filename, type=filetype)
+
+    return jsonify(g)
+
+@bp.route('/guess', methods=['GET'])
+def guess_file_info_get():
+    """
+    @api {get} /guess Detect properties for a given filename
+    @apiName GuessFileInfo
+    @apiGroup Guessit
+
+    @apiParam {String} filename Filename out of which to guess information.
+
+    @apiSuccess {Object} &nbsp Object containing all detected fields.
+                               For a list of detected properties see <a href="https://guessit.readthedocs.org/en/latest/#features">here</a>
+    """
+    filename = request.args['filename']
+    filetype = request.args.get('type', None)
 
     # TODO: store request in DB
     # TODO: if exception, store in list of bugs
