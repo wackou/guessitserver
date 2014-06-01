@@ -2,11 +2,11 @@
 
 
 from flask_sqlalchemy import SQLAlchemy
-from flask_security import Security
+#from flask_security import Security
 
 #: Flask-SQLAlchemy extension instance
 db = SQLAlchemy()
 
 #: Flask-Security extension instance
-security = Security()
+#security = Security()
 

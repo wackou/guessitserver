@@ -4,7 +4,7 @@ from functools import wraps
 import logging
 
 from flask import render_template, Flask
-from flask_security import login_required
+#from flask_security import login_required
 
 from .core import db
 from guessitserver import dashboard
@@ -55,7 +55,7 @@ def handle_error(e):
 def authenticated_route(bp, *args, **kwargs):
     def decorator(f):
         @bp.route(*args, **kwargs)
-        @login_required
+        #@login_required
         @wraps(f)
         def wrapper(*args, **kwargs):
             return f(*args, **kwargs)
