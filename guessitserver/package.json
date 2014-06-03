@@ -1,0 +1,4 @@
+{
+  "name": "GuessIt - WebService API",
+  "description": "This describes the methods available on the GuessIt webservice.<br>The base URL for all these methods is http://guessit.io/"
+}

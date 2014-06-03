@@ -28,7 +28,7 @@ def post_bug_submission():
     """
     @api {post} /bugs Submit new test case / wrong detection
     @apiName SubmitBug
-    @apiGroup Guessit
+    @apiGroup Submit bug
 
     @apiParam {String} filename Filename which guessit doesn't analyze correctly.
 
@@ -66,12 +66,31 @@ def guess_file_info_post():
     """
     @api {post} /guess Detect properties for a given filename
     @apiName GuessFileInfoPost
-    @apiGroup Guessit
+    @apiGroup Guess
 
     @apiParam {String} filename Filename out of which to guess information.
 
     @apiSuccess {Object} &nbsp Object containing all detected fields.
                                For a list of detected properties see <a href="https://guessit.readthedocs.org/en/latest/#features">here</a>
+
+    @apiSuccessExample Success-Response:
+HTTP/1.1 200 OK
+{
+    "audioChannels": "5.1",
+    "audioCodec": "DolbyDigital",
+    "container": "mkv",
+    "episodeNumber": 3,
+    "format": "WEBRip",
+    "mimetype": "video/x-matroska",
+    "releaseGroup": "NTb",
+    "screenSize": "1080p",
+    "season": 2,
+    "series": "House of Cards",
+    "title": "NF",
+    "type": "episode",
+    "videoCodec": "h264",
+    "year": 2013
+}
     """
     filename = request.form['filename']
     filetype = request.form.get('type', None)
@@ -87,12 +106,35 @@ def guess_file_info_get():
     """
     @api {get} /guess Detect properties for a given filename
     @apiName GuessFileInfoGet
-    @apiGroup Guessit
+    @apiGroup Guess
 
     @apiParam {String} filename Filename out of which to guess information.
 
     @apiSuccess {Object} &nbsp Object containing all detected fields.
                                For a list of detected properties see <a href="https://guessit.readthedocs.org/en/latest/#features">here</a>
+
+    @apiExample Example usage:
+curl "http://guessit.io/guess?filename=House.of.Cards.2013.S02E03.1080p.NF.WEBRip.DD5.1.x264-NTb.mkv"
+
+    @apiSuccessExample Success-Response:
+HTTP/1.1 200 OK
+{
+    "audioChannels": "5.1",
+    "audioCodec": "DolbyDigital",
+    "container": "mkv",
+    "episodeNumber": 3,
+    "format": "WEBRip",
+    "mimetype": "video/x-matroska",
+    "releaseGroup": "NTb",
+    "screenSize": "1080p",
+    "season": 2,
+    "series": "House of Cards",
+    "title": "NF",
+    "type": "episode",
+    "videoCodec": "h264",
+    "year": 2013
+}
+
     """
     filename = request.args['filename']
     filetype = request.args.get('type', None)
@@ -108,8 +150,14 @@ def guessit_version():
     """
     @api {get} /guessit_version Return guessit version
     @apiName GuessitVersion
-    @apiGroup Guessit
+    @apiGroup General
 
     @apiSuccess {String} version Version of GuessIt used for the detection on the server.
+
+    @apiSuccessExample Success-Response:
+    HTTP/1.1 200 OK
+    {
+        "version": "0.7.1"
+    }
     """
     return jsonify(version=guessit.__version__)
