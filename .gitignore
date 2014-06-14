@@ -5,4 +5,5 @@ dist
 .DS_Store
 guessitserver/guessit.sqlite3
 guessitserver.egg-info
+apidox
 

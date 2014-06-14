@@ -7,10 +7,18 @@ from flask import Blueprint, render_template, jsonify, request, redirect
 from guessitserver.core import db
 from guessitserver.models import Submission
 import guessit
+import babelfish
 
 log = logging.getLogger(__name__)
 
 bp = Blueprint('web', __name__, static_folder='static', template_folder='templates')
+
+
+def guessit_to_json(o):
+    if isinstance(o, (guessit.Language, babelfish.Language)):
+        return o.alpha2
+    raise TypeError
+
 
 @bp.route('/robots.txt')
 #@bp.route('/sitemap.xml')
@@ -35,6 +43,7 @@ def post_bug_submission():
     @apiSuccess {String} &nbsp The submitted filename.
     """
     filename = request.form['filename']
+    log.info('Posting bug submission: %s' % filename)
     s = Submission(filename=filename, submit_date=datetime.datetime.utcnow(),
                    active=False, resolved=False)
     db.session.add(s)
@@ -95,11 +104,14 @@ HTTP/1.1 200 OK
     filename = request.form['filename']
     filetype = request.form.get('type', None)
 
+    log.info('[POST] Guess request: %s' % filename)
+
     # TODO: store request in DB
     # TODO: if exception, store in list of bugs
     g = guessit.guess_file_info(filename, type=filetype)
 
-    return jsonify(g)
+    return json.dumps(g, default=guessit_to_json)
+
 
 @bp.route('/guess', methods=['GET'])
 def guess_file_info_get():
@@ -139,11 +151,14 @@ HTTP/1.1 200 OK
     filename = request.args['filename']
     filetype = request.args.get('type', None)
 
+    log.info('[GET] Guess request: %s' % filename)
+
     # TODO: store request in DB
     # TODO: if exception, store in list of bugs
     g = guessit.guess_file_info(filename, type=filetype)
 
-    return jsonify(g)
+    return json.dumps(g, default=guessit_to_json)
+
 
 @bp.route('/guessit_version')
 def guessit_version():

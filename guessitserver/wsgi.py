@@ -4,7 +4,7 @@
 from werkzeug.serving import run_simple
 from werkzeug.wsgi import DispatcherMiddleware
 from guessitserver import frontend
-from config import get_current_environment_config, get_current_environment_config_for_api
+from guessitserver.config import get_current_environment_config, get_current_environment_config_for_api
 import logging
 log = logging.getLogger(__name__)
 
