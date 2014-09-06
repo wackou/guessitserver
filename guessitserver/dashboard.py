@@ -45,6 +45,7 @@ def post_bug_submission():
     filename = request.form['filename']
     log.info('Posting bug submission: %s' % filename)
     s = Submission(filename=filename, submit_date=datetime.datetime.utcnow(),
+                   guessit_version=request.form.get('version'),
                    active=False, resolved=False)
     db.session.add(s)
     db.session.commit()
@@ -65,7 +66,7 @@ def view_bugs():
     subs = [(sub, guess_popover(sub.filename)) for sub in subs]
     return render_template('buglist.html',
                            title='Guessit bugs',
-                           fields=['filename', 'guess', 'submit_date'],
+                           fields=['filename', 'guess', 'guessit_version', 'submit_date'],
                            submissions=subs,
                            guessitversion=guessit.__version__)
 
