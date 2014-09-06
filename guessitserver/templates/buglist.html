@@ -12,6 +12,7 @@
           {% elif f == 'guess'           %} <th>Guess (Guessit version: {{ guessitversion }})</th>
           {% elif f == 'submit_date'     %} <th>Submit date</th>
           {% elif f == 'guessit_version' %} <th>Guessit version</th>
+          {% elif f == 'options'         %} <th>Options</th>
           {% elif f == 'resolved'        %} <th>Resolved</th>
           {% elif f == 'active'          %} <th>Active</th>
           {% else %}                        <th> {{ f }} </th>
@@ -24,6 +25,7 @@
           {% elif f == 'guess'           %} <th>Guess (Guessit version: {{ guessitversion }})</th>
           {% elif f == 'submit_date'     %} <th>Submit date</th>
           {% elif f == 'guessit_version' %} <th>Guessit version</th>
+          {% elif f == 'options'         %} <th>Options</th>
           {% elif f == 'resolved'        %} <th>Resolved</th>
           {% elif f == 'active'          %} <th>Active</th>
           {% else                        %} <th> {{ f }} </th>
@@ -37,6 +39,7 @@
           {% elif f == 'guess'           %} <td>{{ guess | safe }}</td>
           {% elif f == 'submit_date'     %} <td>{{ submission.submit_date | datetime }}</td>
           {% elif f == 'guessit_version' %} <td>{{ submission.guessit_version or '' }}</td>
+          {% elif f == 'options'         %} <td>{{ submission.options or '' }}</td>
           {% elif f == 'resolved'        %} <td>{{ submission.resolved }}</td>
           {% elif f == 'active'          %} <td>{{ submission.active }}</td>
           {% else                        %} <td> ??? </td>

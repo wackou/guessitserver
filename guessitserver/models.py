@@ -17,6 +17,7 @@ class Submission(db.Model):
     filename = db.Column(db.String(1000), nullable=False)
     submit_date = db.Column(db.DateTime(), nullable=False)
     guessit_version = db.Column(db.String(20))
+    options = db.Column(db.String())
     resolved = db.Column(db.Boolean(), nullable=False)
     active = db.Column(db.Boolean(), nullable=False)
 
