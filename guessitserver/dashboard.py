@@ -4,7 +4,7 @@ import datetime
 import logging
 
 from flask import Blueprint, render_template, jsonify, request, redirect
-from guessitserver.core import db
+from guessitserver.core import db, crossdomain
 from guessitserver.models import Submission
 import guessit
 import babelfish
@@ -74,6 +74,7 @@ def view_bugs():
 
 
 @bp.route('/guess', methods=['POST'])
+@crossdomain(origin='*')
 def guess_file_info_post():
     """
     @api {post} /guess Detect properties for a given filename
@@ -117,6 +118,7 @@ HTTP/1.1 200 OK
 
 
 @bp.route('/guess', methods=['GET'])
+@crossdomain(origin='*')
 def guess_file_info_get():
     """
     @api {get} /guess Detect properties for a given filename
