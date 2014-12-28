@@ -1,1 +1,7 @@
--r requirements/common.txt
+# for the webapp itself
+
+guessit>=0.8
+
+# other dependencies which do not require a specific version come from setup.py
+# see: https://caremad.io/blog/setup-vs-requirement/
+-e .
