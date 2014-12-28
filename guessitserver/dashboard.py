@@ -23,7 +23,7 @@ import json
 import datetime
 import logging
 
-from flask import Blueprint, render_template, jsonify, request, redirect
+from flask import Blueprint, render_template, request, redirect, current_app, send_from_directory
 from guessitserver.core import db, crossdomain
 from guessitserver.models import Submission
 import guessit
@@ -40,6 +40,10 @@ def guessit_to_json(o):
     raise TypeError(repr(o) + ' is not JSON serializable')
 
 
+def jsonify(o):
+    return current_app.response_class(json.dumps(o, default=guessit_to_json),
+                                      mimetype='application/json')
+
 @bp.route('/robots.txt')
 #@bp.route('/sitemap.xml')
 def static_from_root():
@@ -47,9 +51,11 @@ def static_from_root():
     static folder. Files still need to be put inside the static folder."""
     return send_from_directory(bp.static_folder, request.path[1:])
 
+
 @bp.route('/')
 def homepage():
     return redirect('http://guessit.readthedocs.org/')
+
 
 @bp.route('/bugs', methods=['POST'])
 def post_bug_submission():
@@ -71,6 +77,7 @@ def post_bug_submission():
     db.session.add(s)
     db.session.commit()
     return filename
+
 
 @bp.route('/bugs')
 def view_bugs():
@@ -134,7 +141,7 @@ HTTP/1.1 200 OK
     # TODO: if exception, store in list of bugs
     g = guessit.guess_file_info(filename, type=filetype)
 
-    return json.dumps(g, default=guessit_to_json)
+    return jsonify(g)
 
 
 @bp.route('/guess', methods=['GET'])
@@ -182,7 +189,7 @@ HTTP/1.1 200 OK
     # TODO: if exception, store in list of bugs
     g = guessit.guess_file_info(filename, type=filetype)
 
-    return json.dumps(g, default=guessit_to_json)
+    return jsonify(g)
 
 
 @bp.route('/guessit_version')
@@ -200,4 +207,4 @@ def guessit_version():
         "version": "0.7.1"
     }
     """
-    return jsonify(version=guessit.__version__)
+    return jsonify({'version': guessit.__version__})
