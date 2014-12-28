@@ -44,13 +44,13 @@ def format_datetime(value, fmt='full'):
 
 
 
-def create_app(settings_override=None):
+def create_app(settings=None):
     """Returns the GuessitServer dashboard application instance"""
 
     print('creating Flask app guessitserver')
     app = Flask('guessitserver', instance_relative_config=True)
 
-    app.config.from_object(settings_override)
+    app.config.from_object(settings)
 
     db.init_app(app)
 
