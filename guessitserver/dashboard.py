@@ -100,6 +100,27 @@ def view_bugs():
                            guessitversion=guessit.__version__)
 
 
+def parse_opt(v):
+    # parse a boolean
+    if v.lower() in {'true', 'yes'}:
+        return True
+    if v.lower() in {'false', 'no'}:
+        return False
+
+    # parse an int
+    try:
+        return int(v)
+    except ValueError:
+        pass
+    # TODO: parse list of objects
+
+    return v
+
+
+def parse_options_dict(d):
+    return {k: parse_opt(v) for k, v in d.items()}
+
+
 @bp.route('/guess', methods=['POST'])
 @crossdomain(origin='*')
 def guess_file_info_post():
@@ -109,6 +130,8 @@ def guess_file_info_post():
     @apiGroup Guess
 
     @apiParam {String} filename Filename out of which to guess information.
+
+    @apiParam {String} * Other fields you pass will be forwarded as options to the guesser.
 
     @apiSuccess {Object} &nbsp Object containing all detected fields.
                                For a list of detected properties see <a href="https://guessit.readthedocs.org/en/latest/#features">here</a>
@@ -132,14 +155,17 @@ HTTP/1.1 200 OK
     "year": 2013
 }
     """
-    filename = request.form['filename']
-    filetype = request.form.get('type', None)
 
-    log.info('[POST] Guess request: %s' % filename)
+    args = parse_options_dict(request.form)
+    filename = args.pop('filename')
+    filetype = args.pop('type', None)
+    options = args
+
+    log.info('[POST] Guess request: %s  --  options: %s' % (filename, options))
 
     # TODO: store request in DB
     # TODO: if exception, store in list of bugs
-    g = guessit.guess_file_info(filename, type=filetype)
+    g = guessit.guess_file_info(filename, type=filetype, options=options)
 
     return jsonify(g)
 
@@ -153,6 +179,8 @@ def guess_file_info_get():
     @apiGroup Guess
 
     @apiParam {String} filename Filename out of which to guess information.
+
+    @apiParam {String} * Other fields you pass will be forwarded as options to the guesser.
 
     @apiSuccess {Object} &nbsp Object containing all detected fields.
                                For a list of detected properties see <a href="https://guessit.readthedocs.org/en/latest/#features">here</a>
@@ -180,14 +208,17 @@ HTTP/1.1 200 OK
 }
 
     """
-    filename = request.args['filename']
-    filetype = request.args.get('type', None)
+    args = parse_options_dict(request.args)
+    filename = args.pop('filename')
+    filetype = args.pop('type', None)
+    options = args
 
-    log.info('[GET] Guess request: %s' % filename)
+    log.info('[GET] Guess request: %s  --  options: %s' % (filename, options))
+
 
     # TODO: store request in DB
     # TODO: if exception, store in list of bugs
-    g = guessit.guess_file_info(filename, type=filetype)
+    g = guessit.guess_file_info(filename, type=filetype, options=options)
 
     return jsonify(g)
 
