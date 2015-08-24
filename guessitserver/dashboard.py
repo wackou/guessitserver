@@ -36,7 +36,10 @@ bp = Blueprint('web', __name__, static_folder='static', template_folder='templat
 
 def guessit_to_json(o):
     if isinstance(o, (guessit.Language, babelfish.Language, babelfish.Country)):
-        return o.alpha2
+        try:
+            return o.alpha2
+        except:
+            return o.alpha3
     raise TypeError(repr(o) + ' is not JSON serializable')
 
 
